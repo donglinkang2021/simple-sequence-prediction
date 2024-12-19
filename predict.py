@@ -89,7 +89,7 @@ def main():
     from src.utils.plot import plot_results
     import pandas as pd
     data = pd.read_csv(test_file).to_numpy()
-    # plot_results(predictions_batch, data, save_path='predict_batch_w_y.png')
+    plot_results(predictions_batch, data, save_path='predict_batch_y_w.png')
 
     predictions_regressive = predict_regressive_1d(model, seq_norm[:-n_steps], n_steps, device)
     predictions_regressive = predictions_regressive * std + mean
