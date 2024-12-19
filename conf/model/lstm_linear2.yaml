@@ -1,0 +1,6 @@
+_target_: src.model.lstm_linear2.Model
+input_size: 2
+hidden_size: 128
+num_layers: 2
+output_size: 1
+is_rand_init: false
