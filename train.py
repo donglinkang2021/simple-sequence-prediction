@@ -28,7 +28,9 @@ def main(cfg: DictConfig):
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # Get data loaders
-    train_loader, val_loader = get_data_loaders(cfg.dataset.train_file, cfg.train.time_steps, batch_size=32)
+    train_loader, val_loader = get_data_loaders(
+        cfg.dataset.train_file, cfg.train.time_steps, cfg.train.batch_size, cfg.train.is_random_split
+    )
 
     # Initialize model, criterion, and optimizer
     model = hydra.utils.instantiate(cfg.model)
@@ -53,8 +55,8 @@ def main(cfg: DictConfig):
     logger.add_hparams(
         hparam_dict = omegaconf_dict_to_tb_hparams(cfg),
         metric_dict = {
-            'train_loss': train_loss,
-            'val_loss': val_loss
+            'Final/train_loss': train_loss,
+            'Final/val_loss': val_loss
         },
         run_name='hparams'
     )

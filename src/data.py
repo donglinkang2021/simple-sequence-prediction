@@ -1,15 +1,17 @@
 import torch
 from torch.utils.data import Dataset, DataLoader, random_split
-from .utils.data import load_and_preprocess_data
+# from .utils.data2d import load_and_preprocess_data
+from .utils.data1d import load_and_preprocess_data
 
 class SequenceDataset(Dataset):
     def __init__(self, sequences, targets):
         self.sequences = torch.tensor(sequences, dtype=torch.float32)
         self.targets = torch.tensor(targets, dtype=torch.float32)
 
-        # if target is 1D, add a dimension
         if len(self.targets.shape) == 1:
-            self.targets = self.targets.unsqueeze(1)
+            self.targets = self.targets.unsqueeze(-1)
+        if len(self.sequences.shape) == 2:
+            self.sequences = self.sequences.unsqueeze(-1)
 
     def __len__(self):
         return len(self.sequences)

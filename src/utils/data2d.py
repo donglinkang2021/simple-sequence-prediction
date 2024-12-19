@@ -17,15 +17,11 @@ def prepare_sequences(data:pd.DataFrame, time_steps:int=1):
     """Prepare sequences for LSTM input."""
     sequences = []
     labels = []
+    if isinstance(data, pd.DataFrame):
+        data = data.to_numpy()
     for i in range(len(data) - time_steps):
-        if isinstance(data, pd.DataFrame):
-            seq = data.iloc[i:(i + time_steps)].to_numpy()
-            label = data.iloc[i + time_steps, 1]
-        elif isinstance(data, np.ndarray):
-            seq = data[i:(i + time_steps)]
-            label = data[i + time_steps, 1]
-        else:
-            raise ValueError("Data must be a DataFrame or a NumPy array.")
+        seq = data[i:(i + time_steps)]
+        label = data[i + time_steps, 1]
         sequences.append(seq)
         labels.append(label)
     return np.array(sequences), np.array(labels)
@@ -40,4 +36,4 @@ if __name__ == '__main__':
     print(w_plus_y_sequences.shape, w_plus_y_labels.shape)
     print(y_plus_w_sequences.shape, y_plus_w_labels.shape)
 
-# python -m src.utils.data
+# python -m src.utils.data2d

@@ -1,5 +1,7 @@
 # Simple Sequence Prediction
 
+![alt](predict_regressive_y_w.png)
+
 This project implements several sequence prediction models with PyTorch. The task is to predict formaldehyde concentration based on time.
 
 The project utilizes two datasets **w+y.csv** and **y+w.csv** ("White + Yellow" and "Yellow + White"), which contain two columns of  `time(h)` and `formaldehyde(ug/m³)`. Both datasets are located in the `data` directory.
