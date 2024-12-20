@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
-import numpy as np
-from .base import BaseLSTM
+from .baselstm import BaseLSTM
 
 class Model(BaseLSTM):
     def __init__(self, input_size:int, hidden_size:int, num_layers:int, output_size:int, is_rand_init:bool=False):
@@ -17,9 +16,9 @@ class Model(BaseLSTM):
         return out, hidden
 
 if __name__ == "__main__":
-    B, T, D = 32, 10, 2
-
     from .utils import init_weights, model_summary
+    import numpy as np
+    B, T, D = 32, 10, 2
     model = Model(input_size=D, hidden_size=64, num_layers=2, output_size=1)
     model.apply(init_weights)
     model_summary(model)

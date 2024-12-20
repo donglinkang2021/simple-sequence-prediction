@@ -1,3 +1,3 @@
 save_dir: ./logs
-name: ${hydra:runtime.choices.model}_hs${model.hidden_size}_${hydra:runtime.choices.dataset}_ts${train.time_steps}_lr${train.learning_rate}
+name: ${hydra:runtime.choices.model}_vs${model.vocab_size}_dm${model.d_model}_${hydra:runtime.choices.dataset}_ts${train.time_steps}_lr${train.learning_rate}
 version: ${now:%Y-%m-%d-%H-%M-%S}

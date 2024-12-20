@@ -29,7 +29,11 @@ def main(cfg: DictConfig):
 
     # Get data loaders
     train_loader, val_loader = get_data_loaders(
-        cfg.dataset.train_file, cfg.train.time_steps, cfg.train.batch_size, cfg.train.is_random_split
+        cfg.dataset.train_file, 
+        cfg.train.time_steps, 
+        cfg.train.batch_size, 
+        cfg.train.is_random_split,
+        cfg.train.is_align_target
     )
 
     # Initialize model, criterion, and optimizer

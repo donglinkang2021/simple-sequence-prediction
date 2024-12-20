@@ -2,7 +2,7 @@
 
 | One-Step(Batch) | Multi-Step(Regressive) |
 |:---------------:|:-----------------------:|
-| ![alt](predict_batch_y_w.png) | ![alt](predict_regressive_y_w.png) |
+| ![alt](lstm_predict_batch_y_w.png) | ![alt](lstm_predict_regressive_y_w.png) |
 
 This project implements several sequence prediction models with PyTorch. The task is to predict formaldehyde concentration based on time.
 
