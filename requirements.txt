@@ -1,6 +1,8 @@
 torch
 pandas
 numpy
+tqdm
 matplotlib
-openpyxl
-scikit-learn
+tensorboard
+hydra-core
+tabulate

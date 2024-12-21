@@ -9,11 +9,13 @@ class Model(nn.Module):
         # register buffer here for quantization
         self.register_buffer('embedding', torch.randn(vocab_size, d_model, requires_grad=True))
         self.encoder = nn.Linear(input_dim, d_model)
+        self.ln = nn.LayerNorm(d_model)
         self.decoder = nn.Linear(d_model, output_dim)
 
     def forward(self, x):
         # input x shape: (B, T, 1)
         x = self.encoder(x) # -> (B, T, D)
+        x = self.ln(x)
         probs = (x @ self.embedding.T / math.sqrt(self.d_model)).softmax(dim=-1)
         quantize = probs @ self.embedding
         x = self.decoder(quantize)
@@ -32,7 +34,7 @@ if __name__ == "__main__":
     out = model(seq)[0]
     print(out.shape)  # Expected output: torch.Size([32, 10, 1])
 
-# python -m src.model.vqmlp
+# python -m src.model.vqlnmlp
 
 
         

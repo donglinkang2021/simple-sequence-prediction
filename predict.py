@@ -3,6 +3,8 @@ import numpy as np
 from tqdm import tqdm
 import hydra
 from omegaconf import OmegaConf
+from pathlib import Path
+import argparse
 
 def predict_regressive_1d(model:torch.nn.Module, seq: np.ndarray, n_steps: int, device: torch.device) -> np.ndarray:
     model.eval()
@@ -38,10 +40,25 @@ def mse_loss(y_true, y_pred):
     return np.mean((y_true - y_pred) ** 2)
 
 def main():
-    model_name = 'vqmlp_vs32_dm8_y_w_ts96_lr0.007/2024-12-20-11-14-50'
-    # model_name = 'lstm_linear1_y_w_ts112_lr0.0005/2024-12-20-10-47-35'
-    log_dir = '.cache/logs-vqmlp-vs-dm-lr-ts'
-    # log_dir = './logs'
+    parser = argparse.ArgumentParser(description='Predict using a trained LSTM model.')
+    parser.add_argument('--model_name', type=str, required=True, help='Name of the model to use for prediction.')
+    parser.add_argument('--log_dir', type=str, default='./logs', help='Directory where the model logs are stored.')
+    parser.add_argument('--predict_rate', type=float, default=1, help='Rate at which to predict.')
+    parser.add_argument('--save_img_dir', type=str, default='predict_images', help='Directory to save prediction images.')
+    parser.add_argument('--predict_on_testset', action='store_true', help='Flag to predict on the training set.')
+
+    args = parser.parse_args()
+
+    model_name = args.model_name
+    log_dir = args.log_dir
+    predict_rate = args.predict_rate
+    save_img_dir = args.save_img_dir
+    predict_on_testset = args.predict_on_testset
+
+    # load model and mkdir
+    Path(save_img_dir).mkdir(parents=True, exist_ok=True)
+    model_prefix = model_name.split('/')[0]
+    model_prefix = f'{save_img_dir}/{model_prefix}'
     model_dir = f'{log_dir}/{model_name}'
     cfg = OmegaConf.load(f'{model_dir}/config.yaml')
     model = hydra.utils.instantiate(cfg.model)
@@ -50,36 +67,37 @@ def main():
     model.to(device)
 
     from src.utils.data1d import load_data, prepare_sequences
-    
+    file2short = {
+        'data/w+y.csv': 'w_y',
+        'data/y+w.csv': 'y_w',
+    }
     test_file = cfg.dataset.train_file
-    # test_file = "data/w+y.csv"
-    seq = load_data(test_file)
+    if predict_on_testset:
+        test_file = "data/y+w.csv" if test_file == "data/w+y.csv" else "data/w+y.csv"
 
-    predict_rate = 1
-    
+    # predict one-step and multi-step
+    seq = load_data(test_file)
     mean = seq.mean()
     std = seq.std()
     seq_norm = (seq - mean) / std
-
     time_steps = cfg.train.time_steps
     sequences, _ = prepare_sequences(seq_norm, time_steps)
     total_length = len(sequences)
     n_steps = int(total_length * predict_rate)
     test_seq = sequences[-n_steps:]
     predictions_batch = predict_batch(model, test_seq, device)
-    print(f"MSE loss: {mse_loss(seq_norm[-n_steps:], predictions_batch)}")
     predictions_batch = predictions_batch * std + mean
+    predictions_regressive = predict_regressive_1d(model, seq_norm[:-n_steps], n_steps, device)
+    predictions_regressive = predictions_regressive * std + mean
 
+    # plot results
     from src.utils.plot import plot_results
     import pandas as pd
     data = pd.read_csv(test_file).to_numpy()
-
-    model_prefix = model_name.split('_')[0]
-    plot_results(predictions_batch, data, save_path=f'{model_prefix}_predict_batch_y_w.png')
+    plot_results(predictions_batch, data, save_path=f'{model_prefix}_predict_batch_{file2short[test_file]}.png')
     print(f'MSE loss: {mse_loss(data[:,1][-n_steps:], predictions_batch)}')
-    predictions_regressive = predict_regressive_1d(model, seq_norm[:-n_steps], n_steps, device)
-    predictions_regressive = predictions_regressive * std + mean
-    plot_results(predictions_regressive, data, save_path=f'{model_prefix}_predict_regressive_y_w.png')
+    plot_results(predictions_regressive, data, save_path=f'{model_prefix}_predict_regressive_{file2short[test_file]}.png')
+    print(f'MSE loss: {mse_loss(data[:,1][-n_steps:], predictions_regressive)}')
 
 if __name__ == '__main__':
     main()

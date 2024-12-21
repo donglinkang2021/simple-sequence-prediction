@@ -13,3 +13,25 @@
 #     train.learning_rate=5e-4 \
 #     train.time_steps=112 \
 #     train.batch_size=64
+
+# # best vqmlp 0.0261
+# python train.py \
+#     model=vqmlp train.is_align_target=True \
+#     model.vocab_size=32 \
+#     model.d_model=8 \
+#     train.time_steps=96 \
+#     train.learning_rate=7e-3
+
+# python train.py \
+#     model=vqlnmlp train.is_align_target=True \
+#     model.vocab_size=32 \
+#     model.d_model=8 \
+#     train.time_steps=96 \
+#     train.learning_rate=7e-3
+
+python train.py --multirun \
+    model=vqlnpemlp train.is_align_target=True \
+    model.vocab_size=32 \
+    model.d_model=8 \
+    train.time_steps=96 \
+    train.learning_rate=3e-2,1e-2,7e-3,3e-3

@@ -54,15 +54,46 @@ tree -I '__pycache__|.git|logs|multirun|images|__init__.py' --dirsfirst
 ### Setup
 
 1. Clone the repository:
-   ```
+   
+   ```bash
    git clone https://github.com/donglinkang2021/simple-sequence-prediction.git
    cd simple-sequence-prediction
    ```
 
 2. Install the required dependencies:
-   ```
+   
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
    pip install -r requirements.txt
    ```
+
+### Usage
+
+To train the model, run the following command:
+
+```bash
+bash scripts/run.sh
+```
+
+If you want to train on multi-windows using `tmux`(multi GPU), you can refer to the following command:
+
+```bash
+bash scripts/run_tmux.sh
+```
+
+To find the best metric in tensorboard, you can run the following command:
+
+```bash
+python scripts/search_tb_event.py
+```
+
+You can copy the best model name to `scripts/predict.sh`, run the following command:
+
+```bash
+# bash scripts/predict.sh
+python predict.py --model_name vqlnmlp_y_w_ts96_lr0.007/2024-12-20-22-23-13
+```
 
 ### License
 

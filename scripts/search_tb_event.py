@@ -23,10 +23,9 @@ def main():
     metrics = {
         'min_loss': min_loss,
         'num_files': num_files,
-        'progress': f'{num_files/8448 * 100:.2f}%',
     }
-    # tablefmt = 'github'
-    tablefmt = 'fancy_grid'
+    tablefmt = 'github'
+    # tablefmt = 'fancy_grid'
     print(tabulate([metrics], headers='keys', tablefmt=tablefmt))
 
     def get_run_name(file):
