@@ -1,0 +1,6 @@
+_target_: src.model.mhvqlnmlp.Model
+input_dim: 1
+vocab_size: 32
+d_model: 64
+output_dim: 1
+n_head: 2

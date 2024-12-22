@@ -29,9 +29,19 @@
 #     train.time_steps=96 \
 #     train.learning_rate=7e-3
 
+# python train.py --multirun \
+#     model=vqlnpemlp,mhvqlnpemlp,mhvqlnmlp \
+#     train.is_align_target=True \
+#     model.vocab_size=32,512,1024 \
+#     model.d_model=32,64 \
+#     train.time_steps=96 \
+#     train.learning_rate=7e-3
+
 python train.py --multirun \
-    model=vqlnpemlp train.is_align_target=True \
+    model=mhvqlnpemlp,mhvqlnmlp \
+    train.is_align_target=True \
     model.vocab_size=32 \
-    model.d_model=8 \
+    model.d_model=32,64,128,256,512 \
+    model.n_head=2,4,8,16 \
     train.time_steps=96 \
-    train.learning_rate=3e-2,1e-2,7e-3,3e-3
+    train.learning_rate=3e-2,1e-2,7e-3,3e-3,7e-4,3e-4
