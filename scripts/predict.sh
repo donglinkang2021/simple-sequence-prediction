@@ -1,11 +1,14 @@
 #!/bin/bash
 
 model_names=(
-    mhvqlnpemlp_vs768_dm128_nh16_y_w_ts96_lr0.007/2024-12-21-17-08-13
-    mhvqlnpemlp_vs128_dm64_nh16_y_w_ts96_lr0.01/2024-12-21-17-00-40  
-    mhvqlnpemlp_vs128_dm512_nh16_y_w_ts96_lr0.03/2024-12-21-17-09-08 
-    mhvqlnpemlp_vs1024_dm128_nh16_y_w_ts96_lr0.01/2024-12-21-17-09-52
-    mhvqlnpemlp_vs768_dm64_nh16_y_w_ts96_lr0.007/2024-12-21-17-02-01 
+mhvqlnmlp_rope_vs512_dm64_nh8_y_w_ts96_lr0.007/2024-12-23-00-04-22 
+mhvqlnmlp_vs512_dm64_nh2_y_w_ts96_lr0.007/2024-12-23-00-04-12      
+mhvqlnpemlp_vs512_dm64_nh2_y_w_ts96_lr0.007/2024-12-23-00-04-16    
+vqlnmlp_rope_vs512_dm64_y_w_ts96_lr0.007/2024-12-23-00-05-26       
+vqlnmlp_vs512_dm64_y_w_ts96_lr0.007/2024-12-23-00-05-16            
+vqlnpemlp_vs512_dm64_y_w_ts96_lr0.007/2024-12-23-00-05-20          
+vqlnmlp_sinpe_vs512_dm64_y_w_ts96_lr0.007/2024-12-23-00-05-23      
+mhvqlnmlp_sinpe_vs512_dm64_nh8_y_w_ts96_lr0.007/2024-12-23-00-04-19
 )
 
 log_dir=./logs
@@ -18,4 +21,4 @@ for model_name in "${model_names[@]}"; do
         --save_img_dir predict_images
 done
 
-# bash predict.sh
+# bash scripts/predict.sh

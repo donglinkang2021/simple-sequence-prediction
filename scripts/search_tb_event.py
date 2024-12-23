@@ -11,7 +11,7 @@ def main():
     event_files = glob.glob(os.path.join(log_dir, '**/hparams/events.out.tfevents*'), recursive=True)
     
     # use filter to find which contains the str `mhvqlnpe`
-    event_files = list(filter(lambda x: 'mhvqlnpe' in x, event_files))
+    # event_files = list(filter(lambda x: 'mhvqlnpe' in x, event_files))
 
     for file in tqdm(event_files, desc="Processing event files", dynamic_ncols=True):
         ea = event_accumulator.EventAccumulator(file)

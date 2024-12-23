@@ -38,10 +38,9 @@
 #     train.learning_rate=7e-3
 
 python train.py --multirun \
-    model=mhvqlnpemlp,mhvqlnmlp \
+    model=mhvqlnmlp,mhvqlnpemlp,mhvqlnmlp_sinpe,mhvqlnmlp_rope,vqlnmlp,vqlnpemlp,vqlnmlp_sinpe,vqlnmlp_rope \
     train.is_align_target=True \
-    model.vocab_size=32 \
-    model.d_model=32,64,128,256,512 \
-    model.n_head=2,4,8,16 \
+    ++model.vocab_size=512 \
+    ++model.d_model=64 \
     train.time_steps=96 \
-    train.learning_rate=3e-2,1e-2,7e-3,3e-3,7e-4,3e-4
+    train.learning_rate=7e-3
