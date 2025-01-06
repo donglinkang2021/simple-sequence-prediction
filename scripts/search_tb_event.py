@@ -6,6 +6,7 @@ from tabulate import tabulate
 
 def main():
     log_dir = './logs'
+    # log_dir = '.cache'
     loss_values = []
     
     event_files = glob.glob(os.path.join(log_dir, '**/hparams/events.out.tfevents*'), recursive=True)
@@ -33,6 +34,7 @@ def main():
 
     def get_run_name(file):
         splits = file.split('/')
+        # return splits[1] + '/' + splits[2] + '/' + splits[3]
         return splits[2] + '/' + splits[3]
 
     sorted_file_loss = sorted(zip(map(get_run_name, event_files), loss_values), key=lambda x: x[1])

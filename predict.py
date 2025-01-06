@@ -70,10 +70,13 @@ def main():
     file2short = {
         'data/w+y.csv': 'w_y',
         'data/y+w.csv': 'y_w',
+        'data/4single.csv': '4single'
     }
     test_file = cfg.dataset.train_file
     if predict_on_testset:
         test_file = "data/y+w.csv" if test_file == "data/w+y.csv" else "data/w+y.csv"
+    # test_file = "data/4single.csv"
+    # test_file = "data/w+y.csv"
 
     # predict one-step and multi-step
     seq = load_data(test_file)

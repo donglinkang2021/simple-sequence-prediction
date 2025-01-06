@@ -7,12 +7,13 @@
 # last time 
 # best model
 # min mse is 0.0137 on lstm_linear1
-# python train.py \
-#     model=lstm_linear1 \
-#     model.hidden_size=64 \
-#     train.learning_rate=5e-4 \
-#     train.time_steps=112 \
-#     train.batch_size=64
+python train.py \
+    model=lstm_linear1 \
+    dataset=4single \
+    model.hidden_size=64 \
+    train.learning_rate=5e-4 \
+    train.time_steps=112 \
+    train.batch_size=64
 
 # # best vqmlp 0.0261
 # python train.py \
@@ -37,10 +38,10 @@
 #     train.time_steps=96 \
 #     train.learning_rate=7e-3
 
-python train.py --multirun \
-    model=mhvqlnmlp,mhvqlnpemlp,mhvqlnmlp_sinpe,mhvqlnmlp_rope,vqlnmlp,vqlnpemlp,vqlnmlp_sinpe,vqlnmlp_rope \
-    train.is_align_target=True \
-    ++model.vocab_size=512 \
-    ++model.d_model=64 \
-    train.time_steps=96 \
-    train.learning_rate=7e-3
+# python train.py --multirun \
+#     model=mhvqlnmlp_rope \
+#     train.is_align_target=True \
+#     ++model.vocab_size=512 \
+#     ++model.d_model=64 \
+#     train.time_steps=16,32,96,128 \
+#     train.learning_rate=3e-2,1e-2,7e-3,3e-3,7e-4,3e-4
