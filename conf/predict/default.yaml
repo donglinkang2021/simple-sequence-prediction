@@ -1,0 +1,3 @@
+predict_rate: 1
+save_img_dir: ${logger.save_dir}
+predict_on_testset: false

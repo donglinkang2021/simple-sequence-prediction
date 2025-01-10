@@ -1,6 +1,7 @@
 defaults:
-  - model: lstm_linear1
+  - model: lstm
   - dataset: y_w
   - train: default
   - logger: default
   - hydra: default
+  - predict: default

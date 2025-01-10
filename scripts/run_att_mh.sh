@@ -1,0 +1,22 @@
+# CUDA_VISIBLE_DEVICES=1 python train.py \
+#     train.is_align_target=True \
+#     model=att_mh \
+#     dataset=y_w \
+#     train.learning_rate=1e-3 \
+#     train.time_steps=112 \
+#     train.batch_size=64
+
+CUDA_VISIBLE_DEVICES=1 python train.py --multirun \
+    train.is_align_target=True \
+    model=att_mh \
+    dataset=y_w \
+    model.kv_heads=1,2,4,8 \
+    model.is_inln=true,false \
+    model.is_qln=true,false \
+    model.is_kln=true,false \
+    model.is_causal=true,false \
+    model.is_n_pe=true,false \
+    model.pe_type=none,randpe,sinpe,rope \
+    train.learning_rate=3e-4 \
+    train.time_steps=112 \
+    train.batch_size=64

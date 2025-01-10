@@ -1,6 +1,5 @@
 import torch
 from torch.utils.data import Dataset, DataLoader, random_split
-# from .utils.data2d import load_and_preprocess_data
 from .utils.data1d import load_and_preprocess_data
 
 class SequenceDataset(Dataset):

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 model_names=(
-lstm_linear1_y_w_ts112_lr0.0005/2024-12-30-16-50-06
+lstm_y_w_ts112_lr0.0005/2025-01-10-21-08-32
 )
 
 log_dir=./logs

@@ -1,6 +1,0 @@
-_target_: src.model.vqlnpemlp.Model
-input_dim: 1
-vocab_size: 512
-d_model: 64
-output_dim: 1
-block_size: 512

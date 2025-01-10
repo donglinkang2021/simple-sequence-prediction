@@ -13,7 +13,7 @@ def predict_regressive_1d(model:torch.nn.Module, seq: np.ndarray, n_steps: int, 
     predictions = []
     with torch.no_grad():
         for _ in tqdm(range(n_steps)):
-            out = model(seq)[0]
+            out = model(seq)
             if out.shape[1] != 1:
                 out = out[:, -1, :]
             predictions.append(out.squeeze().cpu().numpy())
@@ -31,34 +31,18 @@ def predict_batch(model:torch.nn.Module, seq: np.ndarray, device: torch.device) 
     if len(seq.shape) == 2:
         seq = seq.unsqueeze(-1)
     seq = seq.to(device)
-    output = model(seq)[0]
+    output = model(seq)
     if output.shape[1] != 1:
         output = output[:, -1, :]
     return output.detach().cpu().squeeze().numpy()
 
 def mse_loss(y_true, y_pred):
-    return np.mean((y_true - y_pred) ** 2)
+    return float(np.mean((y_true - y_pred) ** 2))
 
-def main():
-    parser = argparse.ArgumentParser(description='Predict using a trained LSTM model.')
-    parser.add_argument('--model_name', type=str, required=True, help='Name of the model to use for prediction.')
-    parser.add_argument('--log_dir', type=str, default='./logs', help='Directory where the model logs are stored.')
-    parser.add_argument('--predict_rate', type=float, default=1, help='Rate at which to predict.')
-    parser.add_argument('--save_img_dir', type=str, default='predict_images', help='Directory to save prediction images.')
-    parser.add_argument('--predict_on_testset', action='store_true', help='Flag to predict on the training set.')
-
-    args = parser.parse_args()
-
-    model_name = args.model_name
-    log_dir = args.log_dir
-    predict_rate = args.predict_rate
-    save_img_dir = args.save_img_dir
-    predict_on_testset = args.predict_on_testset
-
+def predict(model_name:str, log_dir:str, predict_rate:float, save_img_dir:str, predict_on_testset:bool):
     # load model and mkdir
-    Path(save_img_dir).mkdir(parents=True, exist_ok=True)
-    model_prefix = model_name.split('/')[0]
-    model_prefix = f'{save_img_dir}/{model_prefix}'
+    pred_prefix = f'{save_img_dir}/{model_name}'
+    Path(pred_prefix).mkdir(parents=True, exist_ok=True)
     model_dir = f'{log_dir}/{model_name}'
     cfg = OmegaConf.load(f'{model_dir}/config.yaml')
     model = hydra.utils.instantiate(cfg.model)
@@ -97,10 +81,24 @@ def main():
     from src.utils.plot import plot_results
     import pandas as pd
     data = pd.read_csv(test_file).to_numpy()
-    plot_results(predictions_batch, data, save_path=f'{model_prefix}_predict_batch_{file2short[test_file]}.png')
-    print(f'MSE loss: {mse_loss(data[:,1][-n_steps:], predictions_batch)}')
-    plot_results(predictions_regressive, data, save_path=f'{model_prefix}_predict_regressive_{file2short[test_file]}.png')
-    print(f'MSE loss: {mse_loss(data[:,1][-n_steps:], predictions_regressive)}')
+    plot_results(predictions_batch, data, save_path=f'{pred_prefix}/predict_batch_{file2short[test_file]}.png')
+    plot_results(predictions_regressive, data, save_path=f'{pred_prefix}/predict_regressive_{file2short[test_file]}.png')
+    metrics = {
+        'Predict/mse_batch': mse_loss(data[:,1][-n_steps:], predictions_batch),
+        'Predict/mse_regressive': mse_loss(data[:,1][-n_steps:], predictions_regressive)
+    }
+    OmegaConf.save(OmegaConf.create(metrics), f'{pred_prefix}/metrics.yaml')
+    return metrics
+
+def main():
+    parser = argparse.ArgumentParser(description='Predict using a trained LSTM model.')
+    parser.add_argument('--model_name', type=str, required=True, help='Name of the model to use for prediction.')
+    parser.add_argument('--log_dir', type=str, default='./logs', help='Directory where the model logs are stored.')
+    parser.add_argument('--predict_rate', type=float, default=1, help='Rate at which to predict.')
+    parser.add_argument('--save_img_dir', type=str, default='predict_images', help='Directory to save prediction images.')
+    parser.add_argument('--predict_on_testset', action='store_true', help='Flag to predict on the training set.')
+    args = parser.parse_args()
+    predict(**vars(args))
 
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ from src.data import get_data_loaders
 from src.utils.logger import omegaconf_dict_to_tb_hparams
 from src.model.utils import init_weights
 from src.train import train_epoch, eval_epoch
+from predict import predict
 
 def setup(cfg: DictConfig):
     log_dir = f"{cfg.logger.save_dir}/{cfg.logger.name}/{cfg.logger.version}"
@@ -55,20 +56,31 @@ def main(cfg: DictConfig):
         pbar.update()
     pbar.close()
 
-    # Log hyperparameters and metrics
-    logger.add_hparams(
-        hparam_dict = omegaconf_dict_to_tb_hparams(cfg),
-        metric_dict = {
-            'Final/train_loss': train_loss,
-            'Final/val_loss': val_loss
-        },
-        run_name='hparams'
-    )
-
     # Save the trained model
     torch.save(model.state_dict(), f'{log_dir}/model.pth')
     # Save the config
     OmegaConf.save(cfg, f'{log_dir}/config.yaml')
+
+    # Predict
+    metrics = predict(
+        f"{cfg.logger.name}/{cfg.logger.version}", 
+        cfg.logger.save_dir,
+        cfg.predict.predict_rate, 
+        cfg.predict.save_img_dir, 
+        cfg.predict.predict_on_testset
+    )
+    
+    # add final train and val loss to metrics
+    metrics['Final/train_loss'] = train_loss
+    metrics['Final/val_loss'] = val_loss
+
+    # Log hyperparameters and metrics
+    logger.add_hparams(
+        hparam_dict = omegaconf_dict_to_tb_hparams(cfg),
+        metric_dict = metrics,
+        run_name='hparams'
+    )
+
     
 if __name__ == '__main__':
     main()

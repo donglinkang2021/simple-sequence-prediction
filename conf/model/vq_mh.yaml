@@ -1,0 +1,13 @@
+_target_: src.model.vq_mh.Model
+vocab_size: 32
+d_model: 64
+n_heads: 8
+kv_heads: 2
+input_dim: 1
+output_dim: 1
+block_size: 218
+is_inln: true
+is_qln: true
+is_causal: true
+is_n_pe: true
+pe_type: rope

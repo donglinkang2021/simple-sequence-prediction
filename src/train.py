@@ -14,7 +14,7 @@ def train_epoch(
         sequences = sequences.to(device)
         targets = targets.to(device)
         optimizer.zero_grad()
-        outputs, _ = model(sequences)
+        outputs = model(sequences)
         loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
@@ -33,7 +33,7 @@ def eval_epoch(
         for sequences, targets in val_loader:
             sequences = sequences.to(device)
             targets = targets.to(device)
-            outputs, _ = model(sequences)
+            outputs = model(sequences)
             loss = criterion(outputs, targets)
             total_loss += loss.item()
     return total_loss / len(val_loader)
