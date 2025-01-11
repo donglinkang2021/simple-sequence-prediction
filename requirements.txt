@@ -6,4 +6,4 @@ matplotlib
 tensorboard
 hydra-core
 tabulate
-simplepe==0.0.1
+simplepe

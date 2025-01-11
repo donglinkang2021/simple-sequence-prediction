@@ -59,7 +59,7 @@ def predict(model_name:str, log_dir:str, predict_rate:float, save_img_dir:str, p
     test_file = cfg.dataset.train_file
     if predict_on_testset:
         test_file = "data/y+w.csv" if test_file == "data/w+y.csv" else "data/w+y.csv"
-    # test_file = "data/4single.csv"
+    test_file = "data/4single.csv"
     # test_file = "data/w+y.csv"
 
     # predict one-step and multi-step
@@ -87,7 +87,7 @@ def predict(model_name:str, log_dir:str, predict_rate:float, save_img_dir:str, p
         'Predict/mse_batch': mse_loss(data[:,1][-n_steps:], predictions_batch),
         'Predict/mse_regressive': mse_loss(data[:,1][-n_steps:], predictions_regressive)
     }
-    OmegaConf.save(OmegaConf.create(metrics), f'{pred_prefix}/metrics.yaml')
+    OmegaConf.save(OmegaConf.create(metrics), f'{pred_prefix}/metrics_{file2short[test_file]}.yaml')
     return metrics
 
 def main():

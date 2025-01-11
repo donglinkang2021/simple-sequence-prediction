@@ -1,55 +1,23 @@
+
+
+<div align="center">
+
 # Simple Sequence Prediction
 
-| One-Step(Batch) | Multi-Step(Regressive) |
-|:---------------:|:-----------------------:|
-| ![alt](lstm_predict_batch_y_w.png) | ![alt](lstm_predict_regressive_y_w.png) |
+<img src="https://img.shields.io/badge/license-MIT-8bb903" alt="License">
+<img src="https://img.shields.io/badge/python-3.9.20-3776AB" alt="Python">
+<img src="https://img.shields.io/badge/pytorch-2.5.1+cu124-EE4C2C" alt="PyTorch">
+<img src="https://img.shields.io/badge/hydra-1.3.2-6ca6c0" alt="Hydra">
+<img src="https://img.shields.io/badge/tensorboard-2.18.0-FF6F00" alt="TensorBoard">
+
+</div>
+
+<div align=center>
+   <img src="docs/images/20250111/att_mh_y_w_ts112_lr0.0003/2025-01-10-23-15-54/predict_regressive_y_w.png" width="50%">
+</div>
 
 This project implements several sequence prediction models with PyTorch. The task is to predict formaldehyde concentration based on time.
 
-The project utilizes two datasets **w+y.csv** and **y+w.csv** ("White + Yellow" and "Yellow + White"), which contain two columns of  `time(h)` and `formaldehyde(ug/m³)`. Both datasets are located in the `data` directory.
-
-### Project Structure
-
-```bash
-tree -I '__pycache__|.git|logs|multirun|images|__init__.py' --dirsfirst
-.
-├── conf                         # Configuration directory using Hydra
-│   ├── dataset                  # Dataset configurations
-│   │   ├── w_y.yaml             # Config for white+yellow dataset
-│   │   └── y_w.yaml             # Config for yellow+white dataset
-│   ├── hydra                    # Hydra-specific configurations
-│   │   └── default.yaml         # Default Hydra settings
-│   ├── logger                   # Logging configurations
-│   │   └── default.yaml         # Default logger settings
-│   ├── model                    # Model configurations
-│   │   ├── lstm_linear1.yaml    # Config for simple LSTM model
-│   │   └── lstm_linear2.yaml    # Config for LSTM with extended linear layers
-│   ├── train                    # Training configurations
-│   │   └── default.yaml         # Default training parameters
-│   └── default.yaml             # Root configuration file
-├── data                         # Data directory
-│   ├── w+y.csv                  # White+yellow experiment data
-│   └── y+w.csv                  # Yellow+white experiment data
-├── docs                         # Documentation directory
-│   └── 20241219.md              # Development notes and results
-├── src                          # Source code directory
-│   ├── model                    # Model implementations
-│   │   ├── base.py              # Base LSTM model class
-│   │   ├── lstm_linear1.py      # Simple LSTM implementation
-│   │   ├── lstm_linear2.py      # Extended LSTM implementation
-│   │   └── utils.py             # Model utility functions
-│   ├── utils                    # Utility functions
-│   │   ├── data.py              # Data processing utilities
-│   │   ├── logger.py            # Logging utilities
-│   │   └── plot.py              # Plotting utilities
-│   ├── data.py                  # Dataset and dataloader implementations
-│   └── train.py                 # Training loop implementation
-├── predict.py                   # Prediction script
-├── README.md                    # Project documentation
-├── requirements.txt             # Project dependencies
-├── run.sh                       # Training automation script
-└── train.py                     # Main training entry point
-```
 
 ### Setup
 
@@ -73,26 +41,30 @@ tree -I '__pycache__|.git|logs|multirun|images|__init__.py' --dirsfirst
 To train the model, run the following command:
 
 ```bash
-bash scripts/run.sh
+# recommend to remove all logs before running
+# rm -rf logs # remove all logs
+# also recommend use tmux to run the following scripts
+bash scripts/run_lstm.sh # simple baseline
+bash scripts/run_att.sh # attention mechanism
+bash scripts/run_att_mh.sh # multi-head attention mechanism
+bash scripts/run_vq.sh # vector quantization mlp
+bash scripts/run_vq_mh.sh # vector quantization multi-head mlp
+tensorboard --logdir=logs --bind_all # start tensorboard
+python scripts/search_tb_event.py # search the best result from tensorboard event files
 ```
 
-If you want to train on multi-windows using `tmux`(multi GPU), you can refer to the following command:
+If you want to train on multi-windows using `tmux`(multi GPU) once, you can refer to the following command:
 
 ```bash
 bash scripts/run_tmux.sh
 ```
 
-To find the best metric in tensorboard, you can run the following command:
-
-```bash
-python scripts/search_tb_event.py
-```
-
 You can copy the best model name to `scripts/predict.sh`, run the following command:
 
 ```bash
-# bash scripts/predict.sh
-python predict.py --model_name vqlnmlp_y_w_ts96_lr0.007/2024-12-20-22-23-13
+bash scripts/predict.sh
+# or just run the following command
+python predict.py --model_name att_mh_y_w_ts112_lr0.0003/2025-01-10-23-15-54
 ```
 
 ### License

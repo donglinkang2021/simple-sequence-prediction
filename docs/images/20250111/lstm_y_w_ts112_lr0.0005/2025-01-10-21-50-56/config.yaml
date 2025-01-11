@@ -1,0 +1,23 @@
+model:
+  _target_: src.model.lstm.Model
+  input_dim: 1
+  hidden_dim: 64
+  num_layers: 2
+  output_dim: 1
+dataset:
+  train_file: data/y+w.csv
+train:
+  time_steps: 112
+  num_epochs: 50
+  learning_rate: 0.0005
+  batch_size: 64
+  is_random_split: true
+  is_align_target: false
+logger:
+  save_dir: ./logs
+  name: ${hydra:runtime.choices.model}_${hydra:runtime.choices.dataset}_ts${train.time_steps}_lr${train.learning_rate}
+  version: ${now:%Y-%m-%d-%H-%M-%S}
+predict:
+  predict_rate: 1
+  save_img_dir: ${logger.save_dir}
+  predict_on_testset: false

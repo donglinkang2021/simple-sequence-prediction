@@ -1,0 +1,31 @@
+model:
+  _target_: src.model.att_mh.Model
+  d_model: 64
+  n_heads: 8
+  kv_heads: 1
+  input_dim: 1
+  output_dim: 1
+  block_size: 512
+  is_inln: false
+  is_qln: false
+  is_kln: true
+  is_causal: true
+  is_n_pe: false
+  pe_type: sinpe
+dataset:
+  train_file: data/y+w.csv
+train:
+  time_steps: 112
+  num_epochs: 50
+  learning_rate: 0.0003
+  batch_size: 64
+  is_random_split: true
+  is_align_target: true
+logger:
+  save_dir: ./logs
+  name: ${hydra:runtime.choices.model}_${hydra:runtime.choices.dataset}_ts${train.time_steps}_lr${train.learning_rate}
+  version: ${now:%Y-%m-%d-%H-%M-%S}
+predict:
+  predict_rate: 1
+  save_img_dir: ${logger.save_dir}
+  predict_on_testset: false

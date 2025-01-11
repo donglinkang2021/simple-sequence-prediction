@@ -1,0 +1,17 @@
+\begin{table}
+\caption{Comparison of MSE Metrics Across Datasets and Models}
+\label{tab:mse_comparison}
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{2}{r}{y_w} & \multicolumn{2}{r}{w_y} & \multicolumn{2}{r}{4single} \\
+ & MSE Batch & MSE Regressive & MSE Batch & MSE Regressive & MSE Batch & MSE Regressive \\
+Model &  &  &  &  &  &  \\
+\midrule
+vq_mh_y_w_ts112_lr0.003/2025-01-11-0 0-01-54 & 1936.460000 & 5904.300000 & 3429.420000 & 7694.760000 & 2127.650000 & 33840.210000 \\
+lstm_y_w_ts112_lr0.0005/2025-01-10-21-50-56 & 1114.030000 & 1496.320000 & 2020.890000 & 2870.240000 & 1477.790000 & 34907.240000 \\
+vq_y_w_ts112_lr0.001/2025-01-10-23-17-38 & 1939.850000 & 5500.620000 & 3533.720000 & 6586.740000 & 2018.940000 & 29926.120000 \\
+att_mh_y_w_ts112_lr0.0003/2025-01-10-23-15-54 & 1088.570000 & 1082.980000 & 1981.930000 & 2110.900000 & 6017.920000 & 58717.930000 \\
+att_y_w_ts112_lr0.003/2025-01-10-23-06-46 & 1115.520000 & 1098.240000 & 2023.630000 & 2035.350000 & 4857.970000 & 49269.070000 \\
+\bottomrule
+\end{tabular}
+\end{table}
