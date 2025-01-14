@@ -13,7 +13,7 @@
 </div>
 
 <div align=center>
-   <img src="docs/images/20250111/att_mh_y_w_ts112_lr0.0003/2025-01-10-23-15-54/predict_regressive_y_w.png" width="50%">
+   <img src="docs/images/20250111/att_mh_y_w_ts112_lr0.0003/2025-01-10-23-15-54/predict_regressive_y_w.png" width="80%">
 </div>
 
 This project implements several sequence prediction models with PyTorch. The task is to predict formaldehyde concentration based on time.
