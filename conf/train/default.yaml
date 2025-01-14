@@ -1,6 +1,6 @@
-time_steps: 10
+time_steps: 112
 num_epochs: 50
 learning_rate: 1e-3
-batch_size: 32
+batch_size: 64
 is_random_split: True
 is_align_target: False

@@ -1,9 +1,9 @@
 _target_: src.model.vq.Model
-vocab_size: 32
+vocab_size: 64
 d_model: 64
 input_dim: 1
 output_dim: 1
 block_size: 512
-is_inln: true
+is_inln: false
 is_causal: true
-pe_type: rope
+pe_type: randpe

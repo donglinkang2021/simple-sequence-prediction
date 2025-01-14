@@ -3,9 +3,9 @@ d_model: 64
 input_dim: 1
 output_dim: 1
 block_size: 512
-is_inln: false
+is_inln: true
 is_qln: true
 is_kln: true
-is_causal: false
-is_n_pe: true
-pe_type: rope
+is_causal: true
+is_n_pe: false
+pe_type: sinpe

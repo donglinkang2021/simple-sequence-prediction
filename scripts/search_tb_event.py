@@ -116,11 +116,11 @@ def search(query: str = None):
     print(tabulate(simlify(sorted_metrics[:10]), headers='keys', tablefmt='github'))
 
     # statistics for each model params
-    print(tabulate(get_model_ranks(sorted_metrics), headers='keys', tablefmt='github'))
-    print(tabulate(get_model_ranks(sorted_metrics,2)[:10], headers='keys', tablefmt='github'))
-    print(tabulate(get_model_ranks(sorted_metrics,3)[:10], headers='keys', tablefmt='github'))
+    # print(tabulate(get_model_ranks(sorted_metrics), headers='keys', tablefmt='github'))
+    # print(tabulate(get_model_ranks(sorted_metrics,2)[:10], headers='keys', tablefmt='github'))
+    # print(tabulate(get_model_ranks(sorted_metrics,3)[:10], headers='keys', tablefmt='github'))
 
-def main():
+def search_all_models():
     model_list = [
         "lstm_y_w",
         "att_y_w",
@@ -132,5 +132,28 @@ def main():
         print(f"Searching for {model}")
         search(model)
 
+def search_all_datasets():
+    dataset_list = [
+        "y_w",
+        "4single"
+    ]
+    for dataset in dataset_list:
+        print(f"Searching for {dataset}")
+        search(dataset)
+
+def search_all_steps():
+    steps_list = [
+        "ts64",
+        "ts128",
+        "ts256",
+        "ts512",
+        "ts1024",
+    ]
+    for steps in steps_list:
+        print(f"Searching for {steps}")
+        search(steps)
+
 if __name__ == '__main__':
-    main()
+    # search_all_models()
+    # search_all_datasets()
+    search_all_steps()

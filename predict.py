@@ -20,26 +20,36 @@ def predict_regressive_1d(model:torch.nn.Module, seq: np.ndarray, n_steps: int, 
             seq = torch.cat((seq[:, 1:, :], out.unsqueeze(-1)), dim=1)
     return np.array(predictions)
 
-def predict_batch(model:torch.nn.Module, seq: np.ndarray, device: torch.device) -> np.ndarray:
+def predict_batch(model:torch.nn.Module, seq: np.ndarray, device: torch.device, batch_size: int = 64) -> np.ndarray:
     """
     Input seq: numpy array of shape (n_steps, time_steps, D) or (n_steps, time_steps)
     Return predictions: numpy array of shape (n_steps,)
     """
     model.eval()
-    seq = torch.tensor(seq, dtype=torch.float32) 
-    # make it (n_steps, T, D)
-    if len(seq.shape) == 2:
-        seq = seq.unsqueeze(-1)
-    seq = seq.to(device)
-    output = model(seq)
-    if output.shape[1] != 1:
-        output = output[:, -1, :]
-    return output.detach().cpu().squeeze().numpy()
+    predictions = []
+    
+    # Process sequence in batches
+    for i in range(0, len(seq), batch_size):
+        batch = seq[i:i + batch_size]
+        batch = torch.tensor(batch, dtype=torch.float32)
+        
+        # make it (batch_size, T, D)
+        if len(batch.shape) == 2:
+            batch = batch.unsqueeze(-1)
+        
+        batch = batch.to(device)
+        with torch.no_grad():
+            output = model(batch)
+            if output.shape[1] != 1:
+                output = output[:, -1, :]
+            predictions.append(output.cpu().squeeze().numpy())
+    
+    return np.concatenate(predictions)
 
 def mse_loss(y_true, y_pred):
     return float(np.mean((y_true - y_pred) ** 2))
 
-def predict(model_name:str, log_dir:str, predict_rate:float, save_img_dir:str, predict_on_testset:bool):
+def predict(model_name:str, log_dir:str, predict_rate:float, save_img_dir:str):
     # load model and mkdir
     pred_prefix = f'{save_img_dir}/{model_name}'
     Path(pred_prefix).mkdir(parents=True, exist_ok=True)
@@ -57,9 +67,7 @@ def predict(model_name:str, log_dir:str, predict_rate:float, save_img_dir:str, p
         'data/4single.csv': '4single'
     }
     test_file = cfg.dataset.train_file
-    if predict_on_testset:
-        test_file = "data/y+w.csv" if test_file == "data/w+y.csv" else "data/w+y.csv"
-    test_file = "data/4single.csv"
+    # test_file = "data/4single.csv"
     # test_file = "data/w+y.csv"
 
     # predict one-step and multi-step
@@ -96,7 +104,6 @@ def main():
     parser.add_argument('--log_dir', type=str, default='./logs', help='Directory where the model logs are stored.')
     parser.add_argument('--predict_rate', type=float, default=1, help='Rate at which to predict.')
     parser.add_argument('--save_img_dir', type=str, default='predict_images', help='Directory to save prediction images.')
-    parser.add_argument('--predict_on_testset', action='store_true', help='Flag to predict on the training set.')
     args = parser.parse_args()
     predict(**vars(args))
 

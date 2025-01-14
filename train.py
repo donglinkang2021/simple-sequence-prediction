@@ -7,7 +7,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from src.data import get_data_loaders
 from src.utils.logger import omegaconf_dict_to_tb_hparams
-from src.model.utils import init_weights
+from src.model.utils import init_weights, model_summary
 from src.train import train_epoch, eval_epoch
 from predict import predict
 
@@ -39,6 +39,7 @@ def main(cfg: DictConfig):
 
     # Initialize model, criterion, and optimizer
     model = hydra.utils.instantiate(cfg.model)
+    model_summary(model)
     model.apply(init_weights)
     model.to(device)
     criterion = torch.nn.MSELoss()
@@ -66,8 +67,7 @@ def main(cfg: DictConfig):
         f"{cfg.logger.name}/{cfg.logger.version}", 
         cfg.logger.save_dir,
         cfg.predict.predict_rate, 
-        cfg.predict.save_img_dir, 
-        cfg.predict.predict_on_testset
+        cfg.predict.save_img_dir
     )
     
     # add final train and val loss to metrics
